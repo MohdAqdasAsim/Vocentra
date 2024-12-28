@@ -5,7 +5,7 @@ class MBartModel:
     def __init__(self):
         model_name = "facebook/mbart-large-50-many-to-many-mmt"
         self.tokenizer = MBart50Tokenizer.from_pretrained(model_name)
-        self.model = MBartForConditionalGeneration.from_pretrained(model_name)
+        self.model = MBartForConditionalGeneration.from_pretrained(model_name,load_in_8bit=True, device_map="auto")
         
         # Use GPU if available
         if torch.cuda.is_available():

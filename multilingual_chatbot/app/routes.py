@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, current_app as app
 from models.mBART_model import MBartModel
 from models.blenderbot_model import BlenderbotModel
 from .grammar import grammar_check
+import psutil
 
 # Initialize the mBART model lazily
 mbart = None
@@ -30,6 +31,16 @@ def home():
     Basic route to check if the server is running.
     """
     return "Server is running!"
+    
+@api_bp.route('/memory')
+def memory_usage():
+    memory = psutil.virtual_memory()
+    return {
+        "total": memory.total,
+        "used": memory.used,
+        "free": memory.available,
+        "percent": memory.percent
+    }
 
 @api_bp.route('/chat', methods=['POST'])
 def chat():

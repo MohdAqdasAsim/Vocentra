@@ -6,7 +6,7 @@ class BlenderbotModel:
         # Use BlenderBot model
         model_name = "facebook/blenderbot_small-90M"
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+        self.model = AutoModelForSeq2SeqLM.from_pretrained(model_name,load_in_8bit=True, device_map="auto")
         
         # Use GPU if available
         if torch.cuda.is_available():

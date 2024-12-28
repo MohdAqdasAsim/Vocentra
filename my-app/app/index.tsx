@@ -1,55 +1,56 @@
 import React, { useEffect, useState } from "react";
-import { useNavigation, useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View, ActivityIndicator } from "react-native";
-import Colors from "@/constants/Colors";
-import NotFoundScreen from "./NotFoundScreen";
-import "./global.css";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { OnBoardingPage } from "./pages";
+import { TabsLayout } from "./(tabs)/_layout";
+import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from "expo-font";
+import "../global.css";
 
-const App = () => {
-  const router = useRouter();
-  const navigation = useNavigation();
-  const [hasOnBoarded, setHasOnBoarded] = useState<boolean | null>(null);
+SplashScreen.preventAutoHideAsync();
 
-  // useEffect(() => {
-  //   const checkOnBoarded = async () => {
-  //     try {
-  //       const value = await AsyncStorage.getItem("hasLaunched");
-  //       if (value === null) {
-  //         // First launch
-  //         await AsyncStorage.setItem("hasLaunched", "true");
-  //         setHasOnBoarded(true);
-  //       } else {
-  //         // Not the first launch
-  //         setHasOnBoarded(false);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error checking first launch:", error);
-  //     }
-  //   };
+const Stack = createStackNavigator();
 
-  //   checkOnBoarded();
-  // }, []);
+export default function App() {
+  const [fontsLoaded, error] = useFonts({
+    Heartful: require("../assets/fonts/Heartful.ttf"),
+  });
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasOnBoarded, setHasOnBoarded] = useState(false);
 
   useEffect(() => {
-    if (hasOnBoarded === false) {
-      requestAnimationFrame(() => {
-        router.replace("/home" as any);
-      });
-    }
-    navigation.setOptions({
-      title: "Profile Info",
-      headerTitleStyle: {
-        fontFamily: "Heartful",
-        fontSize: 24,
-      },
-      headerTitleAlign: "center",
-      headerTintColor: Colors.BACKGROUND_BLUE,
-      headerShadowVisible: false,
-    });
-  }, [hasOnBoarded, router, navigation]);
+    const checkOnBoarded = async () => {
+      try {
+        const value = await AsyncStorage.getItem("hasLaunched");
+        if (value === null) {
+          // First launch
+          await AsyncStorage.setItem("hasLaunched", "true");
+          setHasOnBoarded(false);
+        } else {
+          // Not the first launch
+          setHasOnBoarded(true);
+        }
+      } catch (error) {
+        console.error("Error checking onboarding status:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  if (hasOnBoarded === null) {
-    // Render a loading screen while checking AsyncStorage
+    checkOnBoarded();
+
+    if (error) {
+      console.error("Font loading error:", error);
+      return;
+    }
+    if (fontsLoaded) SplashScreen.hideAsync();
+  }, [fontsLoaded, error]);
+
+  if (isLoading) {
+    // Render a loading screen while AsyncStorage is being checked
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" />
@@ -57,8 +58,19 @@ const App = () => {
     );
   }
 
-  return <View>{hasOnBoarded && <NotFoundScreen />}</View>;
-  // return <>{hasOnBoarded && <OnBoardingPage />}</>;
-};
+  if (!fontsLoaded) {
+    return null;
+  }
 
-export default App;
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {hasOnBoarded ? (
+          <Stack.Screen name="Main" component={TabsLayout} />
+        ) : (
+          <Stack.Screen name="Onboarding" component={OnBoardingPage} />
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
