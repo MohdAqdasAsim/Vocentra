@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "893637674601",
+    "project_id": "vocentra",
+    "storage_bucket": "vocentra.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893637674601:android:ca6e53ed6038287b1ec4f8",
+        "android_client_info": {
+          "package_name": "com.mohdaqdasasim.vocentra"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUtWg9r0WCkIWBKwcNT9In4US1zizkmZo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

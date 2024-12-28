@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 export default function ProfileScreen() {
   return (
     <View>
-      <Text>Transactions</Text>
+      <Text className='md-2'>Transactions</Text>
       <StatusBar style='light' />
     </View>
   );

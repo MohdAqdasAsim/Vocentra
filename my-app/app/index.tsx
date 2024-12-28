@@ -3,6 +3,7 @@ import { useNavigation, useRouter } from "expo-router";
 import { View, ActivityIndicator } from "react-native";
 import Colors from "@/constants/Colors";
 import NotFoundScreen from "./NotFoundScreen";
+import "./global.css";
 
 const App = () => {
   const router = useRouter();
@@ -56,7 +57,7 @@ const App = () => {
     );
   }
 
-  return <>{hasOnBoarded && <NotFoundScreen />}</>;
+  return <View>{hasOnBoarded && <NotFoundScreen />}</View>;
   // return <>{hasOnBoarded && <OnBoardingPage />}</>;
 };
 

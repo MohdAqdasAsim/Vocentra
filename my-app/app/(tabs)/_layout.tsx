@@ -7,8 +7,9 @@ const Tab = createBottomTabNavigator();
 export function TabsLayout() {
   return (
     <Tab.Navigator>
-      {/* Your tab screens here */}
-      <Tab.Screen name="Home" component={HomeScreen} /> 
+      <Tab.Screen options={{headerShown:false}} name="Home" component={HomeScreen} /> 
+      <Tab.Screen name="Connect" component={ProfileScreen} />
+      <Tab.Screen name="Leaderboard" component={ProfileScreen} /> 
       <Tab.Screen name="Profile" component={ProfileScreen} /> 
     </Tab.Navigator>
   );

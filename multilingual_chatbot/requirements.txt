@@ -1,5 +1,5 @@
 flask
+flask_cors
 transformers
 torch
 requests
-rasa
