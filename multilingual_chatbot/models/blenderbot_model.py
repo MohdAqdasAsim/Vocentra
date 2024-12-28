@@ -4,7 +4,7 @@ import torch
 class BlenderbotModel:
     def __init__(self):
         # Use BlenderBot model
-        model_name = "facebook/blenderbot-400M-distill"
+        model_name = "facebook/blenderbot_small-90M"
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
         
