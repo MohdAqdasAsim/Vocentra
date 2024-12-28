@@ -24,6 +24,13 @@ def get_blenderbot():
 # Create Flask Blueprint
 api_bp = Blueprint("api", __name__)
 
+@api_bp.route('/')
+def home():
+    """
+    Basic route to check if the server is running.
+    """
+    return "Server is running!"
+
 @api_bp.route('/chat', methods=['POST'])
 def chat():
     """
