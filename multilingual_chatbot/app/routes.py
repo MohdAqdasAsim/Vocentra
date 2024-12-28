@@ -3,11 +3,23 @@ from models.mBART_model import MBartModel
 from models.blenderbot_model import BlenderbotModel
 from .grammar import grammar_check
 
-# Initialize the mBART model
-mbart = MBartModel()
+# Initialize the mBART model lazily
+mbart = None
 
-# Initialize Blenderbot Model
-blenderbot = BlenderbotModel()
+def get_mbart():
+    global mbart
+    if mbart is None:
+        mbart = MBartModel()
+    return mbart
+
+# Initialize Blenderbot Model lazily
+blenderbot = None
+
+def get_blenderbot():
+    global blenderbot
+    if blenderbot is None:
+        blenderbot = BlenderbotModel()
+    return blenderbot
 
 # Create Flask Blueprint
 api_bp = Blueprint("api", __name__)
@@ -33,24 +45,24 @@ def chat():
         message_grammar_feedback = grammar_check(user_message,message_lang)
 
         # Step 2: Translate the message to English
-        translated_to_english = mbart.translate(
+        translated_to_english = get_mbart().translate(
             user_message, 
             message_lang, 
             "en"
         )
 
         # Step 3: Generate response using Blenderbot
-        blenderbot_response = blenderbot.generate_response(chat_id, translated_to_english)
+        blenderbot_response = get_blenderbot().generate_response(chat_id, translated_to_english)
 
         # Step 4: Translate back to the initial message language
-        translated_back = mbart.translate(
+        translated_back = get_mbart().translate(
             blenderbot_response, 
             "en",
             message_lang
         )
 
         # Step 5: Translate to User's Language
-        user_lang_response = mbart.translate(
+        user_lang_response = get_mbart().translate(
             blenderbot_response, 
             "en", 
             user_lang
