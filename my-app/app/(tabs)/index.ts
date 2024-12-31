@@ -1,6 +1,6 @@
 import HomeScreen from './HomeScreen';
 import ConnectScreen from './ConnectScreen';
-import LeaderboardScreen from './LeaderboardScreen';
 import ProfileScreen from './ProfileScreen';
+import TalkWithAiScreen from './TalkWithAiScreen';
 
-export { HomeScreen, ConnectScreen, LeaderboardScreen, ProfileScreen };
+export { HomeScreen, ConnectScreen, ProfileScreen, TalkWithAiScreen };

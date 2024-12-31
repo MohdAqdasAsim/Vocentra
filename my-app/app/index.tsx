@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { OnBoardingPage } from "./pages";
@@ -8,12 +8,16 @@ import { TabsLayout } from "./(tabs)/_layout";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import "../global.css";
+import { ThemeProvider } from "@/contexts/ThemeProvider";
+import { useTheme } from "@/hooks/useTheme";
 
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  const theme = useTheme();
+
   const [fontsLoaded, error] = useFonts({
     Heartful: require("../assets/fonts/Heartful.ttf"),
   });
@@ -50,10 +54,9 @@ export default function App() {
   }, [fontsLoaded, error]);
 
   if (isLoading) {
-    // Render a loading screen while AsyncStorage is being checked
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
+      <View className={`${theme === "dark" ? "bg-darkBackground" : "bg-lightBackground"} flex-1 justify-center items-center`}>
+        <ActivityIndicator size="large" color={theme === "dark" ? "#FFFFFF" : "#1F2937"} />
       </View>
     );
   }
@@ -63,7 +66,8 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
+    <ThemeProvider>
+      <NavigationContainer independent={true}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {hasOnBoarded ? (
           <Stack.Screen name="Main" component={TabsLayout} />
@@ -72,5 +76,6 @@ export default function App() {
         )}
       </Stack.Navigator>
     </NavigationContainer>
+    </ThemeProvider>
   );
 }
